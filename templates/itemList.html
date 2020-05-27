@@ -1,0 +1,50 @@
+{% macro itemList(items) %}
+<ul class="list-group mb-4">
+    {% for item in items %}
+        {{ notStartedItem(item) if item.status == "Not Started" else completedItem(item) }}
+    {% endfor %}
+</ul>
+{% endmacro %}
+
+{% macro notStartedItem(item) %}
+<li class="list-group-item list-group-item-info">
+  <div class="d-flex w-100">
+    <div class="mr-auto text-break overflow-hidden">{{item.title}}</div>
+
+    {{ markItemCompletedButton(item) }}
+    
+    {{ deleteItemButton(item) }}
+    
+  </div>
+</li>
+{% endmacro %}
+
+{% macro completedItem(item) %}
+<li class="list-group-item list-group-item-success">
+  <div class="d-flex w-100">
+    <div class="mr-auto text-break overflow-hidden">{{item.title}}</div>
+    
+    {{ deleteItemButton(item) }}
+  </div>
+</li>
+{% endmacro %}
+
+{% macro markItemCompletedButton(item) %}
+<div class="mr-2">
+    <form method="post" action="item/{{item.id}}/mark-completed">
+        <button type="submit" class="btn btn-success" aria-label={{"Mark " + item.title + " as completed"}}>
+            <i class="fa fa-check fa-fw fa-sm"></i>
+        </button>
+    </form>
+</div>
+{% endmacro %}
+
+{% macro deleteItemButton(item) %}
+<div>
+  <form method="post" action="item/{{item.id}}/delete">
+    <button type="submit" class="btn btn-danger" aria-label={{"Delete " + item.title}}>
+      <i class="fas fa-trash-alt fa-fw fa-sm"></i>
+    </button>
+  </form>
+</div>
+{% endmacro %}

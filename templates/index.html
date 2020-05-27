@@ -1,28 +1,24 @@
+{% from "itemList.html" import itemList %}
+
 {% extends "layout.html" %}
-{% block title %}To-Do App{% endblock %}
+{% block title %}Ti-Di Ipp{% endblock %}
 
 {% block content %}
   <div class="jumbotron">
-    <h1 class="display-4">To-Do App</h1>
-    <p class="lead">Just another to-do app.</p>
+    <h1 class="display-4">Ti-Di Ipp</h1>
+    <p class="lead">Like To-Do App, but with an I.</p>
   </div>
-
-  <h2 class="sr-only">Add Item</h2>
-  <form action="/add-item" method="post">
-    <div class="d-flex mx-md-4">
-      <input class="form-control" id="title" name="title" placeholder="New item" aria-label="Item title" />
-      <button class="btn btn-primary ml-1" type="submit"><i class="fa fa-plus"></i></button>
-    </div>
-  </form>
 
   <div class="row">
     <div class="col-md-12">
       <h2>Items</h2>
-      <ul class="list-group mb-4">
-        {% for item in items %}
-          <li>{{item.title}}</li>
-        {% endfor %}
-      </ul>
+      <form action="/item/add" method="post">
+        <div class="d-flex my-4">
+          <input class="form-control" id="title" name="title" placeholder="New item" aria-label="New item title" />
+          <button class="btn btn-primary ml-2" type="submit" aria-label="Add item"><i class="fa fa-plus"></i></button>
+        </div>
+      </form>
+      {{ itemList(items) }}
     </div>
   </div>
 {% endblock %}
