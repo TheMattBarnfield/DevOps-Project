@@ -70,10 +70,7 @@ def save_item(item):
 
 def delete_item(id):
     items = get_items()
-    print(items)
-    print(id)
     updated_items = [item for item in items if item['id'] != id]
-    print(updated_items)
     session['items'] = updated_items
 
     return id
