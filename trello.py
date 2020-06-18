@@ -1,5 +1,7 @@
 from requests import get, post, put, delete
 from config import TRELLO_URL, TRELLO_KEY, TRELLO_TOKEN, TRELLO_BOARD
+from item import Item
+from status import NOT_STARTED, COMPLETED
 
 CREDS = {
     "key": TRELLO_KEY,
@@ -9,6 +11,8 @@ CREDS = {
 trelloLists = get(f"{TRELLO_URL}/boards/{TRELLO_BOARD}/lists", params=CREDS).json()
 listIdToName = {list['id']: list['name'] for list in trelloLists}
 listNameToId = {list['name']: list['id'] for list in trelloLists}
+
+assert(set(listNameToId.keys()) == set([NOT_STARTED, COMPLETED]))
 
 def get_items():
     cards = get(f"{TRELLO_URL}/boards/{TRELLO_BOARD}/cards", params=CREDS).json()
@@ -25,7 +29,7 @@ def get_item(id):
 def add_item(title):
     post(f"{TRELLO_URL}/cards", params={
         "name": title,
-        "idList": listNameToId['Not Started'],
+        "idList": listNameToId[NOT_STARTED],
         **CREDS
     })
 
@@ -39,13 +43,10 @@ def set_status(id, status):
         **CREDS
     })
 
+
 def delete_item(id):
     delete(f"{TRELLO_URL}/cards/{id}", params=CREDS)
 
 
 def parseTrelloCard(trelloCard):
-    return {
-        "id": trelloCard['id'],
-        "status": listIdToName[trelloCard['idList']],
-        "title": trelloCard['name']
-    }
+    return Item(id=trelloCard['id'], title=trelloCard['name'], status=listIdToName[trelloCard['idList']])
