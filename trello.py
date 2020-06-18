@@ -20,7 +20,7 @@ def get_items():
 
 
 def get_item(id):
-    reponse = get(f"{TRELLO_URL}/cards/{id}", params=CREDS)
+    response = get(f"{TRELLO_URL}/cards/{id}", params=CREDS)
     if response.status_code != 200:
         return None
     return parseTrelloCard(response.json())
