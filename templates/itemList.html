@@ -31,7 +31,7 @@
 
 {% macro markItemCompletedButton(item) %}
 <div class="mr-2">
-    <form method="post" action="item/{{item.id}}/mark-completed">
+    <form method="post" action="{{url_for('mark_completed', id=item.id)}}">
         <button type="submit" class="btn btn-success" aria-label={{"Mark " + item.title + " as completed"}}>
             <i class="fa fa-check fa-fw fa-sm"></i>
         </button>
@@ -41,7 +41,7 @@
 
 {% macro deleteItemButton(item) %}
 <div>
-  <form method="post" action="item/{{item.id}}/delete">
+  <form method="post" action="{{url_for('delete', id=item.id)}}">
     <button type="submit" class="btn btn-danger" aria-label={{"Delete " + item.title}}>
       <i class="fas fa-trash-alt fa-fw fa-sm"></i>
     </button>
