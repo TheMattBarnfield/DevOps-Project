@@ -1,5 +1,8 @@
 from item import Item
 from status import NOT_STARTED, COMPLETED, IN_PROGRESS
+from datetime import datetime
+
+DATE_TIME_FORMAT = "%Y-%m-%dT%H:%M:%S.%fZ"
 
 class TrelloConfig:
     def __init__(self, key, token, url, board_id):
@@ -72,4 +75,9 @@ class Trello:
 
 
     def parseTrelloCard(self, trelloCard):
-        return Item(id=trelloCard['id'], title=trelloCard['name'], status=self._listIdToName[trelloCard['idList']])
+        return Item(
+            id=trelloCard['id'],
+            title=trelloCard['name'],
+            status=self._listIdToName[trelloCard['idList']],
+            last_updated=datetime.strptime(trelloCard['dateLastActivity'], DATE_TIME_FORMAT)
+        )

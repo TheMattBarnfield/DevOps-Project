@@ -1,10 +1,11 @@
 from status import COMPLETED, NOT_STARTED, parseStatus
 
 class Item:
-    def __init__(self, id, title, status):
+    def __init__(self, id, title, status, last_updated):
         self._id = id
         self._title = title
         self._status = parseStatus(status)
+        self._last_updated = last_updated
 
     @property
     def id(self):
@@ -17,6 +18,10 @@ class Item:
     @property
     def status(self):
         return self._status
+
+    @property
+    def last_updated(self):
+        return self._last_updated
 
     def __str__(self):
         return f"Item(id: {self._id}, title: {self._title}, status: {self._status}"

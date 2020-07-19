@@ -1,4 +1,5 @@
 from status import COMPLETED, IN_PROGRESS, NOT_STARTED
+from datetime import datetime
 
 class ViewModel:
     def __init__(self, items):
@@ -7,6 +8,18 @@ class ViewModel:
     @property
     def items(self):
         return self._items
+
+    @property
+    def show_all_done_items(self):
+        return len(self.completed_items) < 6
+
+    @property
+    def recently_completed_items(self):
+        return list(filter(lambda item: item.last_updated.date() >= datetime.now().date(), self.completed_items))
+
+    @property
+    def older_completed_items(self):
+        return list(filter(lambda item: item.last_updated.date() < datetime.now().date(), self.completed_items))
 
     @property
     def not_started_items(self):

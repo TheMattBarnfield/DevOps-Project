@@ -5,6 +5,7 @@ from item import Item
 import sys
 import pytest
 from api_client import ApiClient
+from datetime import datetime
 
 def init_trello():
     config = TrelloConfig('key', 'token', 'url', 'board_id')
@@ -164,8 +165,8 @@ def test_gets_items():
     api_client.get.assert_called_once_with(f'{config.url}/boards/{config.board_id}/cards', config.credentials)
     
     assert set(items) == set([
-        Item('5eeb7b0218807a823e44e373', 'test name 1', NOT_STARTED),
-        Item('5eeb838b1541f3656cee5b27', 'test name 2', COMPLETED)
+        Item('5eeb7b0218807a823e44e373', 'test name 1', NOT_STARTED, datetime(2020, 6, 18, 14, 32, 34, 674000)),
+        Item('5eeb838b1541f3656cee5b27', 'test name 2', COMPLETED, datetime(2020, 6, 18, 15, 9, 2, 988000))
     ])
 
 def test_get_item():
@@ -230,7 +231,7 @@ def test_get_item():
     
     item = trello.get_item('5eeb7b0218807a823e44e373')
     api_client.get.assert_called_once_with(f'{config.url}/cards/5eeb7b0218807a823e44e373', config.credentials)
-    assert item == Item('5eeb7b0218807a823e44e373', 'test item', NOT_STARTED)
+    assert item == Item('5eeb7b0218807a823e44e373', 'test item', NOT_STARTED, datetime(2020, 6, 18, 14, 32, 34, 674000))
 
 
 def test_get_item_returns_none_when_not_found():

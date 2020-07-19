@@ -34,7 +34,6 @@ def add_item():
 @app.route('/')
 def index():
     items = trello.get_items()
-    sorted_items = sorted(items, key=lambda item: 0 if not item.status == COMPLETED else 1)
     item_view_model = ViewModel(items)
     return render_template('index.html', view_model=item_view_model)
 
