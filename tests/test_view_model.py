@@ -44,7 +44,7 @@ class TestViewModel:
         assert view_model.completed_items == [items[1]]
 
 
-    def test_show_all_done_items_is_true_for_5_items(self):
+    def test_show_all_completed_items_is_true_for_5_items(self):
         items = [
             Item('id', 'title', COMPLETED, datetime.now()),
             Item('id', 'title', COMPLETED, datetime.now()),
@@ -56,9 +56,9 @@ class TestViewModel:
         ]
         view_model = ViewModel(items)
         
-        assert view_model.show_all_done_items
+        assert view_model.show_all_completed_items
 
-    def test_show_all_done_items_is_false_for_6_items(self):
+    def test_show_all_completed_items_is_false_for_6_items(self):
         items = [
             Item('id', 'title', COMPLETED, datetime.now()),
             Item('id', 'title', COMPLETED, datetime.now()),
@@ -71,7 +71,7 @@ class TestViewModel:
         ]
         view_model = ViewModel(items)
         
-        assert not view_model.show_all_done_items
+        assert not view_model.show_all_completed_items
 
     def test_recently_completed_items(self):
         items = [

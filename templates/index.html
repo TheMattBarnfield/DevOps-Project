@@ -23,7 +23,26 @@
       <h3>In progress</h3>
       {{ itemList(view_model.in_progress_items) }}
       <h3>Completed</h3>
-      {{ itemList(view_model.completed_items) }}
+      {% if view_model.show_all_completed_items %}
+        {{ itemList(view_model.completed_items) }}
+      {% else %}
+        <h4>Recently</h4>
+        {{ itemList(view_model.recently_completed_items) }}
+        <button 
+          class="btn btn-primary mb-3"
+          type="button"
+          data-toggle="collapse"
+          data-target="#older-completed-items-collapse"
+          aria-expanded="false"
+          aria-controls="older-completed-items-collapse"
+        >
+          Toggle show older
+        </button>
+        <div class="collapse mb-3" id="older-completed-items-collapse">
+          <h4>Older</h4>
+          {{ itemList(view_model.older_completed_items) }}
+        </div>
+      {% endif %}
     </div>
   </div>
 {% endblock %}

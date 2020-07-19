@@ -6,7 +6,6 @@ from view_model import ViewModel
 from api_client import ApiClient
 
 app = Flask(__name__)
-app.config.from_object('flask_config.Config')
 
 trello = Trello(TRELLO_CONFIG, ApiClient())
 

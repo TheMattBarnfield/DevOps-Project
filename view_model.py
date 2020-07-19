@@ -10,7 +10,7 @@ class ViewModel:
         return self._items
 
     @property
-    def show_all_done_items(self):
+    def show_all_completed_items(self):
         return len(self.completed_items) < 6
 
     @property
