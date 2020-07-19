@@ -12,9 +12,9 @@
   <div class="row">
     <div class="col-md-12">
       <h2>Items</h2>
-      <form action="/item/add" method="post">
+      <form action="{{url_for('add_item')}}" method="post">
         <div class="d-flex my-4">
-          <input class="form-control" id="title" name="title" placeholder="New item" aria-label="New item title" />
+          <input class="form-control" id="title" name="title" placeholder="New item" aria-label="New item title" required/>
           <button class="btn btn-primary ml-2" type="submit" aria-label="Add item"><i class="fa fa-plus"></i></button>
         </div>
       </form>
