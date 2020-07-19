@@ -18,7 +18,12 @@
           <button class="btn btn-primary ml-2" type="submit" aria-label="Add item"><i class="fa fa-plus"></i></button>
         </div>
       </form>
-      {{ itemList(items) }}
+      <h3>Not started</h3>
+      {{ itemList(view_model.not_started_items) }}
+      <h3>In progress</h3>
+      {{ itemList(view_model.in_progress_items) }}
+      <h3>Completed</h3>
+      {{ itemList(view_model.completed_items) }}
     </div>
   </div>
 {% endblock %}

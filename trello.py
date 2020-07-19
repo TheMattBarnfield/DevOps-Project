@@ -1,52 +1,75 @@
-from requests import get, post, put, delete
-from config import TRELLO_URL, TRELLO_KEY, TRELLO_TOKEN, TRELLO_BOARD
 from item import Item
-from status import NOT_STARTED, COMPLETED
+from status import NOT_STARTED, COMPLETED, IN_PROGRESS
 
-CREDS = {
-    "key": TRELLO_KEY,
-    "token": TRELLO_TOKEN
-}
+class TrelloConfig:
+    def __init__(self, key, token, url, board_id):
+        self._credentials = {
+            "key": key,
+            "token": token
+        }
+        self._url = url
+        self._board_id = board_id
 
-trelloLists = get(f"{TRELLO_URL}/boards/{TRELLO_BOARD}/lists", params=CREDS).json()
-listIdToName = {list['id']: list['name'] for list in trelloLists}
-listNameToId = {list['name']: list['id'] for list in trelloLists}
+    @property
+    def credentials(self):
+        return self._credentials
 
-assert(set(listNameToId.keys()) == set([NOT_STARTED, COMPLETED]))
+    @property
+    def url(self):
+        return self._url
 
-def get_items():
-    cards = get(f"{TRELLO_URL}/boards/{TRELLO_BOARD}/cards", params=CREDS).json()
-    return [parseTrelloCard(card) for card in cards]
-
-
-def get_item(id):
-    response = get(f"{TRELLO_URL}/cards/{id}", params=CREDS)
-    if response.status_code != 200:
-        return None
-    return parseTrelloCard(response.json())
-
-
-def add_item(title):
-    post(f"{TRELLO_URL}/cards", params={
-        "name": title,
-        "idList": listNameToId[NOT_STARTED],
-        **CREDS
-    })
+    @property
+    def board_id(self):
+        return self._board_id
 
 
-def set_status(id, status):
-    if not status in listNameToId.keys():
-        raise ValueError(f"Attempted to set card {id} to have invalid status: {status}")
+class Trello:
+    def __init__(self, config, api_client):
+        self._url = config.url
+        self._credentials = config.credentials
+        self._board_id = config.board_id
+        self._api_client = api_client
 
-    put(f"{TRELLO_URL}/cards/{id}", params={
-        "idList": listNameToId[status],
-        **CREDS
-    })
+        trelloLists = self._api_client.get(f"{self._url}/boards/{self._board_id}/lists", self._credentials).json()
+        self._listIdToName = {list['id']: list['name'] for list in trelloLists}
+        self._listNameToId = {list['name']: list['id'] for list in trelloLists}
+        assert(set(self._listNameToId.keys()) == set([NOT_STARTED, IN_PROGRESS, COMPLETED]))
 
 
-def delete_item(id):
-    delete(f"{TRELLO_URL}/cards/{id}", params=CREDS)
+
+    def get_items(self):
+        cards = self._api_client.get(f"{self._url}/boards/{self._board_id}/cards", self._credentials).json()
+        return [self.parseTrelloCard(card) for card in cards]
 
 
-def parseTrelloCard(trelloCard):
-    return Item(id=trelloCard['id'], title=trelloCard['name'], status=listIdToName[trelloCard['idList']])
+    def get_item(self, id):
+        response = self._api_client.get(f"{self._url}/cards/{id}", self._credentials)
+        if response.status_code != 200:
+            return None
+        return self.parseTrelloCard(response.json())
+
+
+    def add_item(self, title):
+        self._api_client.post(f"{self._url}/cards", {
+            "name": title,
+            "idList": self._listNameToId[NOT_STARTED],
+            **self._credentials
+        })
+
+
+    def set_status(self, id, status):
+        if not status in self._listNameToId.keys():
+            raise ValueError(f"Attempted to set card {id} to have invalid status: {status}")
+
+        self._api_client.put(f"{self._url}/cards/{id}", params={
+            "idList": self._listNameToId[status],
+            **self._credentials
+        })
+
+
+    def delete_item(self, id):
+        self._api_client.delete(f"{self._url}/cards/{id}", self._credentials)
+
+
+    def parseTrelloCard(self, trelloCard):
+        return Item(id=trelloCard['id'], title=trelloCard['name'], status=self._listIdToName[trelloCard['idList']])

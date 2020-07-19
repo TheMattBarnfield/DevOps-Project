@@ -1,13 +1,26 @@
 {% macro itemList(items) %}
 <ul class="list-group mb-4">
     {% for item in items %}
-        {{ notStartedItem(item) if item.status == "Not Started" else completedItem(item) }}
+        {{ notStartedItem(item) if item.status == "Not Started" else inProgressItem(item) if item.status == "In Progress" else completedItem(item) }}
     {% endfor %}
 </ul>
 {% endmacro %}
 
 {% macro notStartedItem(item) %}
-<li class="list-group-item list-group-item-info">
+<li class="list-group-item list-group-item-warning">
+  <div class="d-flex w-100">
+    <div class="mr-auto text-break overflow-hidden">{{item.title}}</div>
+
+    {{ startItemButton(item) }}
+    
+    {{ deleteItemButton(item) }}
+    
+  </div>
+</li>
+{% endmacro %}
+
+{% macro inProgressItem(item) %}
+<li class="list-group-item list-group-item-primary">
   <div class="d-flex w-100">
     <div class="mr-auto text-break overflow-hidden">{{item.title}}</div>
 
@@ -28,6 +41,17 @@
   </div>
 </li>
 {% endmacro %}
+
+{% macro startItemButton(item) %}
+<div class="mr-2">
+    <form method="post" action="{{url_for('start_item', id=item.id)}}">
+        <button type="submit" class="btn btn-primary" aria-label={{"Start " + item.title}}>
+            <i class="fa fa-play fa-fw fa-sm"></i>
+        </button>
+    </form>
+</div>
+{% endmacro %}
+
 
 {% macro markItemCompletedButton(item) %}
 <div class="mr-2">
