@@ -1,14 +1,15 @@
-from unittest.mock import patch, MagicMock
-from trello import Trello, TrelloConfig
-from status import NOT_STARTED, COMPLETED, IN_PROGRESS
-from item import Item
-import sys
-import pytest
+from unittest.mock import MagicMock
 from api_client import ApiClient
-from datetime import datetime
+from status import NOT_STARTED, COMPLETED, IN_PROGRESS
+from trello import Trello
 
-def init_trello():
-    config = TrelloConfig('key', 'token', 'url', 'board_id')
+def mock_get(response_body, status_code=200):
+    response = MagicMock()
+    response.json.return_value = response_body
+    response.status_code = status_code
+    return MagicMock(return_value=response)
+
+def get_mock_trello(trello_config):
     api_client = ApiClient()
     api_client.get = mock_get([
         {
@@ -39,13 +40,70 @@ def init_trello():
             "subscribed": False
         }
     ])
-    trello = Trello(config, api_client)
-    return trello, api_client, config
+    trello = Trello(trello_config, api_client)
+    return trello, api_client, trello_config
 
+def mock_get_item():
+    return mock_get({
+        "id": "5eeb7b0218807a823e44e373",
+        "checkItemStates": [],
+        "closed": False,
+        "dateLastActivity": "2020-06-18T14:32:34.674Z",
+        "desc": "",
+        "descData": None,
+        "dueReminder": None,
+        "idBoard": "5eeb6486ebbfa66d2e519922",
+        "idList": "5eeb648682bb2c685cc659f0",
+        "idMembersVoted": [],
+        "idShort": 6,
+        "idAttachmentCover": None,
+        "idLabels": [],
+        "manualCoverAttachment": False,
+        "name": "test item",
+        "pos": 32771,
+        "shortLink": "Ee8ozSAd",
+        "isTemplate": False,
+        "dueComplete": False,
+        "due": None,
+        "email": None,
+        "labels": [],
+        "shortUrl": "https://trello.com/c/Ee8ozSAd",
+        "url": "https://trello.com/c/Ee8ozSAd/6-now-with-urlfor",
+        "cover": {
+            "idAttachment": None,
+            "color": None,
+            "idUploadedBackground": None,
+            "size": "normal",
+            "brightness": "light"
+        },
+        "idMembers": [],
+        "badges": {
+            "attachmentsByType": {
+                "trello": {
+                    "board": 0,
+                    "card": 0
+                }
+            },
+            "location": False,
+            "votes": 0,
+            "viewingMemberVoted": False,
+            "subscribed": False,
+            "fogbugz": "",
+            "checkItems": 0,
+            "checkItemsChecked": 0,
+            "checkItemsEarliestDue": None,
+            "comments": 0,
+            "attachments": 0,
+            "description": False,
+            "due": None,
+            "dueComplete": False
+        },
+        "subscribed": False,
+        "idChecklists": []
+    })
 
-def test_gets_items():
-    trello, api_client, config = init_trello()
-    api_client.get = mock_get([
+def mock_get_items():
+    return mock_get([
         {
             "id": "5eeb7b0218807a823e44e373",
             "checkItemStates": None,
@@ -159,97 +217,3 @@ def test_gets_items():
             }
         }
     ])
-
-    items = trello.get_items()
-    
-    api_client.get.assert_called_once_with(f'{config.url}/boards/{config.board_id}/cards', config.credentials)
-    
-    assert set(items) == set([
-        Item('5eeb7b0218807a823e44e373', 'test name 1', NOT_STARTED, datetime(2020, 6, 18, 14, 32, 34, 674000)),
-        Item('5eeb838b1541f3656cee5b27', 'test name 2', COMPLETED, datetime(2020, 6, 18, 15, 9, 2, 988000))
-    ])
-
-def test_get_item():
-    trello, api_client, config = init_trello()
-    api_client.get = mock_get({
-        "id": "5eeb7b0218807a823e44e373",
-        "checkItemStates": [],
-        "closed": False,
-        "dateLastActivity": "2020-06-18T14:32:34.674Z",
-        "desc": "",
-        "descData": None,
-        "dueReminder": None,
-        "idBoard": "5eeb6486ebbfa66d2e519922",
-        "idList": "5eeb648682bb2c685cc659f0",
-        "idMembersVoted": [],
-        "idShort": 6,
-        "idAttachmentCover": None,
-        "idLabels": [],
-        "manualCoverAttachment": False,
-        "name": "test item",
-        "pos": 32771,
-        "shortLink": "Ee8ozSAd",
-        "isTemplate": False,
-        "dueComplete": False,
-        "due": None,
-        "email": None,
-        "labels": [],
-        "shortUrl": "https://trello.com/c/Ee8ozSAd",
-        "url": "https://trello.com/c/Ee8ozSAd/6-now-with-urlfor",
-        "cover": {
-            "idAttachment": None,
-            "color": None,
-            "idUploadedBackground": None,
-            "size": "normal",
-            "brightness": "light"
-        },
-        "idMembers": [],
-        "badges": {
-            "attachmentsByType": {
-                "trello": {
-                    "board": 0,
-                    "card": 0
-                }
-            },
-            "location": False,
-            "votes": 0,
-            "viewingMemberVoted": False,
-            "subscribed": False,
-            "fogbugz": "",
-            "checkItems": 0,
-            "checkItemsChecked": 0,
-            "checkItemsEarliestDue": None,
-            "comments": 0,
-            "attachments": 0,
-            "description": False,
-            "due": None,
-            "dueComplete": False
-        },
-        "subscribed": False,
-        "idChecklists": []
-    })
-    
-    item = trello.get_item('5eeb7b0218807a823e44e373')
-    api_client.get.assert_called_once_with(f'{config.url}/cards/5eeb7b0218807a823e44e373', config.credentials)
-    assert item == Item('5eeb7b0218807a823e44e373', 'test item', NOT_STARTED, datetime(2020, 6, 18, 14, 32, 34, 674000))
-
-
-def test_get_item_returns_none_when_not_found():
-    trello, api_client, config = init_trello()
-    api_client.get = mock_get({}, 404)
-    item = trello.get_item('incorrect')
-    api_client.get.assert_called_once_with(f'{config.url}/cards/incorrect', config.credentials)
-    assert item == None
-
-
-def test_set_status_throws_when_status_is_invalid():
-    trello, api_client, config = init_trello()
-    with pytest.raises(ValueError) as error:
-        trello.set_status('id', 'invalid_status')
-    assert "Attempted to set card id to have invalid status: invalid_status" == str(error.value)
-
-def mock_get(response_body, status_code=200):
-    response = MagicMock()
-    response.json.return_value = response_body
-    response.status_code = status_code
-    return MagicMock(return_value=response)
