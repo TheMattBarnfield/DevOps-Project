@@ -34,6 +34,7 @@ def create_app(script_info, trello=trello):
 
     @app.route('/')
     def index():
+        print('index called')
         items = trello.get_items()
         item_view_model = ViewModel(items)
         return render_template('index.html', view_model=item_view_model)

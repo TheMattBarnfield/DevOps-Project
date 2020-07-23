@@ -81,3 +81,19 @@ class Trello:
             status=self._listIdToName[trelloCard['idList']],
             last_updated=datetime.strptime(trelloCard['dateLastActivity'], DATE_TIME_FORMAT)
         )
+
+    def create_test_board(self):
+        board_id = self._api_client.post(f"{self._url}/boards", params={
+            "name": "todo_app_test",
+            "idBoardSource": self._board_id,
+            **self._credentials
+        }).json()['id']
+
+        newConfig = TrelloConfig(self._credentials['key'], self._credentials['token'], self._url, board_id)
+        return Trello(newConfig, self._api_client)
+
+        
+
+    def delete_board(self):
+        self._api_client.delete(f"{self._url}/boards/{self._board_id}", params=self._credentials)
+
