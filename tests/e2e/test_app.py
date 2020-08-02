@@ -8,6 +8,8 @@ from selenium import webdriver
 from selenium.webdriver.firefox.options import Options
 from api_client import ApiClient
 import time
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.by import By
 
 @pytest.fixture(scope="module")
 def driver():
@@ -36,5 +38,31 @@ def test_app():
 
 
 def test_task_journey(driver, test_app):
+    driver.implicitly_wait(10)
     driver.get('http://localhost:5000/')
+
     assert driver.title == 'Ti-Di Ipp'
+
+    new_item_title = driver.find_element(By.ID, 'title')
+    new_item_title.send_keys('Test task')
+    new_item_title.send_keys(Keys.RETURN)
+
+    item = driver.find_element(By.CLASS_NAME, 'not-started')
+    assert 'Test task' in item.text
+
+    start_button = item.find_element(By.CLASS_NAME, 'start')
+    start_button.click()
+
+    item = driver.find_element(By.CLASS_NAME, 'in-progress')
+    assert 'Test task' in item.text
+
+    complete_button = item.find_element(By.CLASS_NAME, 'mark-completed')
+    complete_button.click()
+
+    item = driver.find_element(By.CLASS_NAME, 'completed')
+    assert 'Test task' in item.text
+
+    delete_button = item.find_element(By.CLASS_NAME, 'delete')
+    delete_button.click()
+
+    assert 'Test task' not in driver.page_source
