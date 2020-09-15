@@ -1,4 +1,6 @@
 import os
+from trello import TrelloConfig
+from dotenv import find_dotenv, load_dotenv
 
 def loadEnv(key):
     value = os.environ.get(key)
@@ -6,7 +8,13 @@ def loadEnv(key):
         raise ValueError(f"No value set for {key}")
     return value
 
-TRELLO_KEY = loadEnv('TRELLO_KEY')
-TRELLO_TOKEN = loadEnv('TRELLO_TOKEN')
-TRELLO_URL = "https://api.trello.com/1"
-TRELLO_BOARD = "OgyYJWzO"
+class Config:
+    def __init__(self, dotenv):
+        file_path = find_dotenv(dotenv)
+        load_dotenv(file_path, override=True)
+        self.trello_config = TrelloConfig(
+            loadEnv('TRELLO_KEY'),
+            loadEnv('TRELLO_TOKEN'),
+            loadEnv('TRELLO_URL'),
+            loadEnv('TRELLO_BOARD_ID')
+        )

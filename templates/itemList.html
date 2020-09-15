@@ -1,13 +1,26 @@
 {% macro itemList(items) %}
 <ul class="list-group mb-4">
     {% for item in items %}
-        {{ notStartedItem(item) if item.status == "Not Started" else completedItem(item) }}
+        {{ notStartedItem(item) if item.status == "Not Started" else inProgressItem(item) if item.status == "In Progress" else completedItem(item) }}
     {% endfor %}
 </ul>
 {% endmacro %}
 
 {% macro notStartedItem(item) %}
-<li class="list-group-item list-group-item-info">
+<li class="list-group-item list-group-item-warning not-started">
+  <div class="d-flex w-100">
+    <div class="mr-auto text-break overflow-hidden">{{item.title}}</div>
+
+    {{ startItemButton(item) }}
+    
+    {{ deleteItemButton(item) }}
+    
+  </div>
+</li>
+{% endmacro %}
+
+{% macro inProgressItem(item) %}
+<li class="list-group-item list-group-item-primary in-progress">
   <div class="d-flex w-100">
     <div class="mr-auto text-break overflow-hidden">{{item.title}}</div>
 
@@ -20,7 +33,7 @@
 {% endmacro %}
 
 {% macro completedItem(item) %}
-<li class="list-group-item list-group-item-success">
+<li class="list-group-item list-group-item-success completed">
   <div class="d-flex w-100">
     <div class="mr-auto text-break overflow-hidden">{{item.title}}</div>
     
@@ -29,10 +42,21 @@
 </li>
 {% endmacro %}
 
+{% macro startItemButton(item) %}
+<div class="mr-2">
+    <form method="post" action="{{url_for('start_item', id=item.id)}}">
+        <button type="submit" class="btn btn-primary start" aria-label={{"Start " + item.title}}>
+            <i class="fa fa-play fa-fw fa-sm"></i>
+        </button>
+    </form>
+</div>
+{% endmacro %}
+
+
 {% macro markItemCompletedButton(item) %}
 <div class="mr-2">
     <form method="post" action="{{url_for('mark_completed', id=item.id)}}">
-        <button type="submit" class="btn btn-success" aria-label={{"Mark " + item.title + " as completed"}}>
+        <button type="submit" class="btn btn-success mark-completed" aria-label={{"Mark " + item.title + " as completed"}}>
             <i class="fa fa-check fa-fw fa-sm"></i>
         </button>
     </form>
@@ -42,7 +66,7 @@
 {% macro deleteItemButton(item) %}
 <div>
   <form method="post" action="{{url_for('delete', id=item.id)}}">
-    <button type="submit" class="btn btn-danger" aria-label={{"Delete " + item.title}}>
+    <button type="submit" class="btn btn-danger delete" aria-label={{"Delete " + item.title}}>
       <i class="fas fa-trash-alt fa-fw fa-sm"></i>
     </button>
   </form>
