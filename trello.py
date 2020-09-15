@@ -36,8 +36,8 @@ class Trello:
         trelloLists = self._api_client.get(f"{self._url}/boards/{self._board_id}/lists", self._credentials).json()
         self._listIdToName = {list['id']: list['name'] for list in trelloLists}
         self._listNameToId = {list['name']: list['id'] for list in trelloLists}
-        assert(set(self._listNameToId.keys()) == set([NOT_STARTED, IN_PROGRESS, COMPLETED]))
-
+        
+        assert(set(self._listNameToId.keys()) == set([NOT_STARTED, IN_PROGRESS, COMPLETED])), f"Unexpected columns on Trello board found: {self._listNameToId.keys()}, expected: {[NOT_STARTED, IN_PROGRESS, COMPLETED]}"
 
 
     def get_items(self):
@@ -86,6 +86,7 @@ class Trello:
         board_id = self._api_client.post(f"{self._url}/boards", params={
             "name": "todo_app_test",
             "idBoardSource": self._board_id,
+            "keepFromSource": "none",
             **self._credentials
         }).json()['id']
 
