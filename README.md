@@ -13,6 +13,13 @@ $ source setup.sh
 $ source setup.sh --windows
 ```
 
+Create a trello board with the columns:
+*`Not Started`
+*`In Progress`
+*`Completed`
+
+Copy `.env.template` to `.env` and fill it in with the correct values.
+
 Once the setup script has completed and all packages have been installed, start the Flask app by running:
 ```bash
 $ flask run
@@ -29,3 +36,10 @@ You should see output similar to the following:
  * Debugger PIN: 226-556-590
 ```
 Now visit [`http://localhost:5000/`](http://localhost:5000/) in your web browser to view the app.
+
+## Tests
+
+For the end-to-end tests, you'll need to install firefox and Gecko Driver.
+
+Run the tests with the command:
+```pytest tests/<unit|integration|e2e>```

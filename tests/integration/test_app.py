@@ -15,7 +15,6 @@ def test_index_page(client_fixture):
     client, api_client = client_fixture
     api_client.get = mock_get_items()
     response = client.get('/')
-    print(response.data)
     assert b"test name 1" in response.data
     assert b"test name 2" in response.data
     
