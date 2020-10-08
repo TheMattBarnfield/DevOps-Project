@@ -4,25 +4,33 @@
 
 The project uses a virtual environment to isolate package dependencies. To create the virtual environment and install required packages, run the following from a bash shell terminal:
 
-### On macOS and Linux
+### Requirements
+
+*Poetry
+*Python
+*A trello account
+
+### Installing dependencies
 ```bash
-$ source setup.sh
+$ poetry install
 ```
-### On Windows (Using Git Bash)
-```bash
-$ source setup.sh --windows
-```
+
+### Create a trello board
 
 Create a trello board with the columns:
 *`Not Started`
 *`In Progress`
 *`Completed`
 
+### Environment variables
+
 Copy `.env.template` to `.env` and fill it in with the correct values.
+
+### Run the app
 
 Once the setup script has completed and all packages have been installed, start the Flask app by running:
 ```bash
-$ flask run
+$ poetry run flask run
 ```
 
 You should see output similar to the following:
