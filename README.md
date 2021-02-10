@@ -72,4 +72,4 @@ Now visit [`http://localhost:5000/`](http://localhost:5000/) in your web browser
 For the end-to-end tests, you'll need to install firefox and Gecko Driver.
 
 Run the tests with the command:
-```pytest tests/<unit|integration|e2e>```
+```poetry run pytest tests/<unit|integration|e2e>```

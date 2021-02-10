@@ -9,9 +9,12 @@ RUN apt-get update \
 ENV PATH="${PATH}:/root/.poetry/bin"
 
 WORKDIR /app
-COPY . .
 
-RUN poetry install
+COPY poetry.toml poetry.lock pyproject.toml ./
+
+RUN poetry install --no-dev
+
+COPY . .
 
 FROM base as prod
 
