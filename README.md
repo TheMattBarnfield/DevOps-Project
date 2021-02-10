@@ -28,6 +28,28 @@ Copy `.env.template` to `.env` and fill it in with the correct values.
 
 ### Run the app
 
+#### With Docker
+
+Run either of these from the project root:
+
+##### Local dev
+
+The following command will work in WSL. If you are using a different shell you'll need to replace `"$(wslpath -w $(pwd))"`
+with the absolute path to the project root.
+
+```bash
+docker build --target dev --tag todo-app:dev .
+docker run -d -p 5000:5000 -v "$(wslpath -w $(pwd))":/app todo-app:dev
+```
+
+##### Prod
+```bash
+docker build --target prod --tag todo-app:prod .
+docker run -d -p 5000:5000 --env-file .env todo-app:prod
+```
+
+#### Manually
+
 Once the setup script has completed and all packages have been installed, start the Flask app by running:
 ```bash
 $ poetry run flask run
