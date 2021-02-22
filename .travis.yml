@@ -9,7 +9,7 @@ jobs:
         - DOCKER_REPO="$DOCKER_USERNAME/todo-app"
         - docker build --target prod -t "$DOCKER_TAG:$TRAVIS_COMMIT" -t "$DOCKER_TAG:latest" .
         - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-        - docker push $DOCKER_REPO --all-tags
+        - docker push $DOCKER_REPO
     - stage: deploy
       script:
         - docker tag $DOCKER_REPO registry.heroku.com/tidi-ipp/web
