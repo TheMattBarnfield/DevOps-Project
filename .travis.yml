@@ -6,6 +6,7 @@ jobs:
         - docker run --name todo-app-test --env TRELLO_URL --env TRELLO_KEY --env TRELLO_BOARD_ID --env TRELLO_TOKEN test
     - stage: deploy
       script:
+        - heroku login
         - DOCKER_REPO="$DOCKER_USERNAME/todo-app"
         - docker build --target prod -t "$DOCKER_REPO:$TRAVIS_COMMIT" -t "$DOCKER_REPO:latest" .
         - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
