@@ -4,9 +4,14 @@ jobs:
       script:
         - docker build --target all_tests -t test .
         - docker run --name todo-app-test --env TRELLO_URL --env TRELLO_KEY --env TRELLO_BOARD_ID --env TRELLO_TOKEN test
+    - stage: build
+      script:
+        - DOCKER_REPO="$DOCKER_USERNAME/todo-app"
+        - docker build --target prod -t "$DOCKER_TAG:$TRAVIS_COMMIT" -t "$DOCKER_TAG:latest" .
+        - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+        - docker push $DOCKER_REPO --all-tags
     - stage: deploy
       script:
-        - DOCKER_TAG="$DOCKER_USERNAME/todo-app:$TRAVIS_COMMIT"
-        - docker build --target prod -t $DOCKER_TAG .
-        - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-        - docker push $DOCKER_TAG
+        - docker tag $DOCKER_REPO registry.heroku.com/tidi-ipp/web
+        - docker push registry.heroku.com/tidi-ipp/web
+        - heroku container:release web
