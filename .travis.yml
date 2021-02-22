@@ -11,5 +11,6 @@ jobs:
         - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
         - docker push $DOCKER_REPO
         - docker tag $DOCKER_REPO registry.heroku.com/tidi-ipp/web
+        - heroku container:login
         - docker push registry.heroku.com/tidi-ipp/web
         - heroku container:release web -a tidi-ipp
