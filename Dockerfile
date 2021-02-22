@@ -17,19 +17,19 @@ RUN poetry install --no-dev
 COPY . .
 
 FROM base as prod
-ENTRYPOINT poetry run gunicorn --bind 0.0.0.0:5000 "app:create_app(None)"
+CMD poetry run gunicorn --bind 0.0.0.0:$PORT "app:create_app(None)"
 
 FROM base as dev
-ENTRYPOINT poetry run flask run --host=0.0.0.0
+CMD poetry run flask run --host=0.0.0.0
 
 FROM base as test
 RUN poetry install
 
 FROM test as unit
-ENTRYPOINT poetry run pytest tests/unit
+CMD poetry run pytest tests/unit
 
 FROM test as integration
-ENTRYPOINT poetry run pytest tests/integration
+CMD poetry run pytest tests/integration
 
 FROM test as e2e
 
@@ -45,7 +45,7 @@ RUN LATEST=`curl -sSL https://chromedriver.storage.googleapis.com/LATEST_RELEASE
     apt-get install unzip -y &&\
     unzip ./chromedriver_linux64.zip
 
-ENTRYPOINT poetry run pytest tests/e2e
+CMD poetry run pytest tests/e2e
 
 FROM e2e as all_tests
-ENTRYPOINT poetry run pytest tests
+CMD poetry run pytest tests
