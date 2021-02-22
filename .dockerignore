@@ -1,6 +1,5 @@
 .*
 env
-tests
 geckodriver*
 Vagrantfile
 Dockerfile

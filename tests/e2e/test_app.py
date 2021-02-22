@@ -5,17 +5,18 @@ import app
 from trello import Trello
 from config import Config
 from selenium import webdriver
-from selenium.webdriver.firefox.options import Options
 from api_client import ApiClient
 import time
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope='module')
 def driver():
-    options = Options()
-    options.headless = True
-    with webdriver.Firefox(options=options) as driver:
+    opts = webdriver.ChromeOptions()
+    opts.add_argument('--headless')
+    opts.add_argument('--no-sandbox')
+    opts.add_argument('--disable-dev-shm-usage')
+    with webdriver.Chrome('./chromedriver', options=opts) as driver:
         yield driver
 
 @pytest.fixture(scope='module')

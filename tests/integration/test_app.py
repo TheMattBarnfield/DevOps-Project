@@ -17,4 +17,3 @@ def test_index_page(client_fixture):
     response = client.get('/')
     assert b"test name 1" in response.data
     assert b"test name 2" in response.data
-    

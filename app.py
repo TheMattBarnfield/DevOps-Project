@@ -6,9 +6,11 @@ from view_model import ViewModel
 from api_client import ApiClient
 
 config = Config('.env')
-trello = Trello(config.trello_config, ApiClient())
 
-def create_app(script_info, trello=trello):
+def create_app(script_info, trello=None):
+    # We defer this so the default is not evaluated in tests
+    trello = Trello(config.trello_config, ApiClient()) if trello is None else trello
+
     app = Flask(__name__)
 
     # Allowing POST so we don't need frontend JS
