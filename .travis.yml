@@ -7,7 +7,7 @@ jobs:
     - stage: build
       script:
         - DOCKER_REPO="$DOCKER_USERNAME/todo-app"
-        - docker build --target prod -t "$DOCKER_TAG:$TRAVIS_COMMIT" -t "$DOCKER_TAG:latest" .
+        - docker build --target prod -t "$DOCKER_REPO:$TRAVIS_COMMIT" -t "$DOCKER_REPO:latest" .
         - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
         - docker push $DOCKER_REPO
     - stage: deploy
