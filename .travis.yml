@@ -1,0 +1,3 @@
+script:
+- docker build --target all_tests -t test . && docker run --name todo-app-test --env-file .env test
+- docker build --target prod -t prod

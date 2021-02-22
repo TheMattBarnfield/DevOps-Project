@@ -1,2 +1,0 @@
-script:
-- docker build --target prod -t prod
