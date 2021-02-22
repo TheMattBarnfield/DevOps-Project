@@ -73,3 +73,8 @@ For the end-to-end tests, you'll need to install firefox and Gecko Driver.
 
 Run the tests with the command:
 ```poetry run pytest tests/<unit|integration|e2e>```
+
+## CI
+
+This CI for this project can be found here: https://travis-ci.com/github/TheMattBarnfield/DevOps-Project.
+It automatically runs the tests whenever a pull request is raised.
