@@ -12,7 +12,8 @@ WORKDIR /app
 
 COPY poetry.toml poetry.lock pyproject.toml ./
 
-RUN poetry install --no-dev
+RUN poetry config virtualenvs.createfalse --local &&\
+    poetry install
 
 COPY . .
 
