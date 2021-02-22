@@ -12,4 +12,4 @@ jobs:
         - docker push $DOCKER_REPO
         - docker tag $DOCKER_REPO "registry.heroku.com/tidi-ipp/web"
         - docker push registry.heroku.com/tidi-ipp/web
-        - heroku container:release web
+        - heroku container:release web --app tidi-ipp
