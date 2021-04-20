@@ -74,6 +74,13 @@ For the end-to-end tests, you'll need to install firefox and Gecko Driver.
 Run the tests with the command:
 ```poetry run pytest tests/<unit|integration|e2e>```
 
+You can also run them with docker using:
+
+```
+docker build --target all_tests -t todo-app:tests .
+docker run --name todo-app-test --env-file .env todo-app:tests
+```
+
 ## CI
 
 This CI for this project can be found here: https://travis-ci.com/github/TheMattBarnfield/DevOps-Project.

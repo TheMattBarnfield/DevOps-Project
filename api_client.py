@@ -2,7 +2,6 @@ from requests import get, post, put, delete
 
 class ApiClient:
     def get(self, url, params):
-        print("Get called", url, params)
         return get(url, params=params)
 
     def post(self, url, params):
