@@ -18,7 +18,7 @@ RUN poetry config virtualenvs.create false --local &&\
 COPY . .
 
 FROM base as prod
-CMD poetry run gunicorn --bind 0.0.0.0:$PORT "app:create_app(None)"
+CMD poetry run gunicorn --bind 0.0.0.0:${PORT:-5000} "app:create_app(None)"
 
 FROM base as dev
 CMD poetry run flask run --host=0.0.0.0
