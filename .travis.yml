@@ -3,7 +3,7 @@ jobs:
     - stage: test
       script:
         - docker build --target all_tests -t test .
-        - docker run --name todo-app-test --env TRELLO_URL --env TRELLO_KEY --env TRELLO_BOARD_ID --env TRELLO_TOKEN test
+        - docker run --name todo-app-test --env DB_USER --env DB_PASS --env DB_NAME test
 deploy:
   provider: script
   script: bash ci/deploy.sh
