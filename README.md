@@ -8,19 +8,12 @@ The project uses a virtual environment to isolate package dependencies. To creat
 
 *Poetry
 *Python
-*A trello account
+*A mongo DB
 
 ### Installing dependencies
 ```bash
 $ poetry install
 ```
-
-### Create a trello board
-
-Create a trello board with the columns:
-*`Not Started`
-*`In Progress`
-*`Completed`
 
 ### Environment variables
 
